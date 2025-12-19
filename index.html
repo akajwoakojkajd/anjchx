@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Emoji Orbit 😜</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.onresize = resize;
+resize();
+
+/* ===== SETTINGS ===== */
+const CENTER_EMOJI = "😜";
+const ORBIT_EMOJI = "😜";
+
+const CENTER_SIZE = 180;   // icon lớn
+const ORBIT_SIZE = 50;     // icon nhỏ
+const ORBIT_COUNT = 16;    // số icon bay
+const ORBIT_RADIUS = 220; // bán kính vòng tròn
+const SPEED = 0.01;       // tốc độ quay
+
+let angle = 0;
+
+/* ===== DRAW EMOJI ===== */
+function drawEmoji(emoji, x, y, size, glow = false) {
+  ctx.save();
+  ctx.font = size + "px serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  if (glow) {
+    ctx.shadowColor = "#ff5ca4";
+    ctx.shadowBlur = 25;
+  }
+
+  ctx.fillText(emoji, x, y);
+  ctx.restore();
+}
+
+/* ===== ANIMATION ===== */
+function animate() {
+  requestAnimationFrame(animate);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  /* ICON LỚN Ở GIỮA */
+  drawEmoji(CENTER_EMOJI, cx, cy, CENTER_SIZE, true);
+
+  /* ICON NHỎ BAY XUNG QUANH */
+  for (let i = 0; i < ORBIT_COUNT; i++) {
+    const a = angle + (Math.PI * 2 / ORBIT_COUNT) * i;
+    const x = cx + Math.cos(a) * ORBIT_RADIUS;
+    const y = cy + Math.sin(a) * ORBIT_RADIUS;
+    drawEmoji(ORBIT_EMOJI, x, y, ORBIT_SIZE, true);
+  }
+
+  angle += SPEED;
+}
+
+animate();
+</script>
+
+</body>
+</html>
